@@ -162,6 +162,7 @@ public class SubmissionService : ISubmissionService
     public async Task<List<TeacherQuizResultDto>> GetTeacherQuizResultsAsync(int quizId, int teacherId)
     {
         var quiz = await _context.Quizzes
+            .Include(q => q.Questions)
             .FirstOrDefaultAsync(q => q.Id == quizId && q.CreatedByTeacherId == teacherId);
 
         if (quiz == null)
@@ -183,13 +184,12 @@ public class SubmissionService : ISubmissionService
                 submission.Id,
                 submission.StudentId,
                 submission.Student.Name,
-                submission.Student.Email,
                 submission.Student.Class?.Name,
                 submission.Score,
                 maxScore,
                 submission.StartedAt,
                 submission.SubmittedAt,
-                submission.Status
+                submission.Status.ToString()
             ));
         }
 
@@ -393,7 +393,7 @@ public class SubmissionService : ISubmissionService
             correctCount,
             submission.StartedAt,
             submission.SubmittedAt ?? DateTime.UtcNow,
-            submission.Status,
+            submission.Status.ToString(),
             answers
         );
     }

@@ -163,7 +163,7 @@ public static class SeedData
             StartedAt = now.AddDays(-1),
             SubmittedAt = now.AddDays(-1).AddMinutes(15),
             Status = SubmissionStatus.Completed,
-            Score = 85
+            Score = 30
         };
         context.Submissions.Add(submission1);
 

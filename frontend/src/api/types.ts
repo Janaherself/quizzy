@@ -201,7 +201,6 @@ export interface TeacherQuizResultDto {
   submissionId: number;
   studentId: number;
   studentName: string;
-  studentEmail: string;
   className: string | null;
   score: number;
   maxPossibleScore: number;

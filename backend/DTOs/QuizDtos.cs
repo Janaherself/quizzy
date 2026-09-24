@@ -166,7 +166,7 @@ public record QuizResultDto(
     int CorrectCount,
     DateTime StartedAt,
     DateTime SubmittedAt,
-    SubmissionStatus Status,
+    string Status,
     List<AnswerResultDto> Answers
 );
 
@@ -186,13 +186,12 @@ public record TeacherQuizResultDto(
     int SubmissionId,
     int StudentId,
     string StudentName,
-    string StudentEmail,
     string? ClassName,
     int Score,
     int MaxPossibleScore,
     DateTime StartedAt,
     DateTime? SubmittedAt,
-    SubmissionStatus Status
+    string Status
 );
 
 public record ClassDto(int Id, string Name);

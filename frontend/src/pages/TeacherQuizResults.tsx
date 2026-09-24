@@ -93,7 +93,6 @@ export function TeacherQuizResults() {
               <thead>
                 <tr>
                   <th>{t('teacherResults_table_student')}</th>
-                  <th>{t('teacherResults_table_email')}</th>
                   <th>{t('teacherResults_table_class')}</th>
                   <th>{t('teacherResults_table_score')}</th>
                   <th>{t('teacherResults_table_max')}</th>
@@ -117,7 +116,6 @@ export function TeacherQuizResults() {
                   return (
                     <tr key={r.submissionId}>
                       <td>{r.studentName}</td>
-                      <td className="text-muted">{r.studentEmail}</td>
                       <td>{r.className ?? '—'}</td>
                       <td>
                         <strong>{r.score}</strong>
