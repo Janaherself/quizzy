@@ -14,6 +14,7 @@
   --radius: 12px;
   --shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
   --transition: 0.18s ease;
+  --toast-slide: 10px;
 }
 
 * {
@@ -37,6 +38,15 @@ body {
   font-size: 15px;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
+}
+
+html[dir="ltr"] {
+  --toast-slide: 10px;
+}
+
+html[dir="rtl"] {
+  font-family: "Tajawal", "Segoe UI", "Noto Naskh Arabic", system-ui, sans-serif;
+  --toast-slide: -10px;
 }
 
 @media (max-width: 640px) {
@@ -198,6 +208,29 @@ header.app-header .logout-btn:hover {
   color: var(--color-text);
 }
 
+.lang-btn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  border-radius: var(--radius);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.lang-btn:hover {
+  color: var(--color-text);
+  background: var(--color-bg-soft);
+}
+
+.lang-btn.active {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
 .btn:disabled,
 .btn[disabled] {
   opacity: 0.55;
@@ -344,12 +377,21 @@ p { margin: 0 0 0.6rem; }
   color: var(--color-text);
 }
 
-.quiz-card .quiz-card-meta {
+.quiz-card-meta {
   font-size: 0.8rem;
   color: var(--color-text-muted);
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  align-items: center;
+}
+
+.quiz-card-meta.meta-separated span:not(:last-child)::after {
+  content: '\00B7';
+  margin-inline-start: 0.35rem;
+  color: var(--color-text-muted);
+  font-weight: bold;
+  opacity: 0.5;
 }
 
 .quiz-card .quiz-card-actions {
@@ -360,8 +402,6 @@ p { margin: 0 0 0.6rem; }
 }
 
 .quiz-card.rtl-fix {
-  direction: rtl;
-  text-align: right;
 }
 
 /* === Empty state === */
@@ -437,7 +477,7 @@ p { margin: 0 0 0.6rem; }
 
 .choice-button {
   width: 100%;
-  text-align: right;
+  text-align: start;
   background: var(--color-bg);
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius);
@@ -526,7 +566,7 @@ p { margin: 0 0 0.6rem; }
 
 .results-table th,
 .results-table td {
-  text-align: right;
+  text-align: start;
   padding: 0.6rem 0.7rem;
   border-bottom: 1px solid var(--color-border);
   font-size: 0.85rem;
@@ -547,10 +587,10 @@ p { margin: 0 0 0.6rem; }
 .toast {
   position: fixed;
   bottom: 1.5rem;
-  right: 1.5rem;
+  inset-inline-end: 1.5rem;
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
-  border-right: 3px solid var(--color-accent);
+  border-inline-end: 3px solid var(--color-accent);
   border-radius: var(--radius);
   padding: 0.8rem 1.1rem;
   box-shadow: var(--shadow);
@@ -559,10 +599,10 @@ p { margin: 0 0 0.6rem; }
   animation: slideIn 0.2s ease;
 }
 
-.toast.error { border-right-color: var(--color-danger); }
+.toast.error { border-inline-end-color: var(--color-danger); }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(10px); }
+  from { opacity: 0; transform: translateX(var(--toast-slide, 10px)); }
   to { opacity: 1; transform: translateX(0); }
 }
 
