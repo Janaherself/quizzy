@@ -59,7 +59,7 @@ public class QuizAvailabilityTests
     }
 
     [Fact]
-    public async Task GetStudentQuizzesAsync_ExcludesClosedQuizzes()
+    public async Task GetStudentQuizzesAsync_ShowsExpiredQuizzesWithExpiredStatus()
     {
         using var db = new TestDb();
         var teacher = await TestData.CreateTeacherAsync(db.Context);
@@ -75,7 +75,9 @@ public class QuizAvailabilityTests
 
         var result = await quizService.GetStudentQuizzesAsync(student.Id);
 
-        result.Should().BeEmpty();
+        result.Should().ContainSingle();
+        result[0].Id.Should().Be(quiz.Id);
+        result[0].Status.Should().Be("Expired");
     }
 
     [Fact]

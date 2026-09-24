@@ -14,6 +14,7 @@ public interface ISubmissionService
     Task<List<TeacherQuizResultDto>> GetTeacherQuizResultsAsync(int quizId, int teacherId);
     Task<Submission?> SaveAnswerAsync(int submissionId, int studentId, int questionId, int? selectedChoiceId);
     Task<Submission?> AutoFinalizeExpiredSubmissionsAsync();
+    Task AutoFinalizeExpiredSubmissionsForStudentAsync(int studentId);
 }
 
 public class SubmissionService : ISubmissionService
@@ -271,6 +272,31 @@ public class SubmissionService : ISubmissionService
 
         await _context.SaveChangesAsync();
         return null;
+    }
+
+    public async Task AutoFinalizeExpiredSubmissionsForStudentAsync(int studentId)
+    {
+        var now = DateTime.UtcNow;
+
+        var expiredSubmissions = await _context.Submissions
+            .Include(s => s.Quiz)
+            .Include(s => s.Answers)
+            .Where(s => s.StudentId == studentId && s.Status == SubmissionStatus.InProgress)
+            .ToListAsync();
+
+        foreach (var submission in expiredSubmissions)
+        {
+            var effectiveDeadline = submission.StartedAt.AddMinutes(submission.Quiz.DurationMinutes);
+            if (submission.Quiz.EndAt < effectiveDeadline)
+                effectiveDeadline = submission.Quiz.EndAt;
+
+            if (now >= effectiveDeadline)
+            {
+                await FinalizeSubmissionAsync(submission);
+            }
+        }
+
+        await _context.SaveChangesAsync();
     }
 
     private async Task FinalizeSubmissionAsync(Submission submission)

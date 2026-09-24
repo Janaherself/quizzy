@@ -222,11 +222,11 @@ public class QuizService : IQuizService
             .Include(q => q.QuizClasses)
                 .ThenInclude(qc => qc.Class)
             .Where(q => q.IsPublished
-                && q.EndAt > now
                 && q.QuizClasses.Any(qc => qc.ClassId == student.ClassId))
             .ToListAsync();
 
         var submissions = await _context.Submissions
+            .Include(s => s.Quiz)
             .Where(s => s.StudentId == studentId && quizzes.Select(q => q.Id).Contains(s.QuizId))
             .ToDictionaryAsync(s => s.QuizId);
 
@@ -380,7 +380,7 @@ public class QuizService : IQuizService
         }
         else
         {
-            displayStatus = status.ToString();
+            displayStatus = status == QuizStatus.Closed ? "Expired" : status.ToString();
         }
 
         return new QuizSummaryDto(

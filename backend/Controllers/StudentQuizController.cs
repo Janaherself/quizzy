@@ -30,6 +30,7 @@ public class StudentQuizController : ControllerBase
     public async Task<ActionResult<List<QuizSummaryDto>>> GetAvailableQuizzes()
     {
         var studentId = GetStudentId();
+        await _submissionService.AutoFinalizeExpiredSubmissionsForStudentAsync(studentId);
         var quizzes = await _quizService.GetStudentQuizzesAsync(studentId);
         return Ok(quizzes);
     }

@@ -45,6 +45,7 @@ export const translations: Record<Language, Record<string, string>> = {
     student_resume: 'Resume',
     student_viewResult: 'View Result',
     student_notYetAvailable: 'Not yet available',
+    student_expired: 'Quiz expired',
     student_alreadySubmitted: 'Already submitted',
     student_submittedHint: 'You can only submit this quiz once.',
     student_viewResultLink: 'View result',
@@ -190,6 +191,7 @@ export const translations: Record<Language, Record<string, string>> = {
     status_closed: 'Closed',
     status_completed: 'Completed',
     status_inProgress: 'In Progress',
+    status_expired: 'Expired',
 
     // Quiz Card
     quizCard_questions: '{count} questions',
@@ -264,10 +266,11 @@ export const translations: Record<Language, Record<string, string>> = {
     student_myQuizzes: 'الكويزات المتاحة',
     student_loadError: 'تعذر تحميل الكويزات.',
     student_emptyTitle: 'لا توجد كويزات متاحة حالياً.',
-    student_startQuiz: 'ابدأ الاختبار',
+     student_startQuiz: 'ابدأ الاختبار',
     student_resume: 'استكمل',
     student_viewResult: 'النتيجة',
     student_notYetAvailable: 'غير متاح بعد',
+    student_expired: 'انتهى الاختبار',
     student_alreadySubmitted: 'تم التقديم بالفعل',
     student_submittedHint: 'يمكنك إرسال هذا الاختبار مرة واحدة فقط.',
     student_viewResultLink: 'عرض النتيجة',
@@ -413,6 +416,7 @@ export const translations: Record<Language, Record<string, string>> = {
     status_closed: 'مغلق',
     status_completed: 'مكتمل',
     status_inProgress: 'جارٍ الإنجاز',
+    status_expired: 'منتهي',
 
     // Quiz Card
     quizCard_questions: '{count} سؤال',

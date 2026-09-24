@@ -1,6 +1,6 @@
 import { useTranslation } from '../i18n/useTranslation';
 
-export type QuizStatus = 'Draft' | 'Upcoming' | 'Live' | 'Closed' | 'Completed' | 'InProgress';
+export type QuizStatus = 'Draft' | 'Upcoming' | 'Live' | 'Closed' | 'Completed' | 'InProgress' | 'Expired';
 
 export const statusLabelKey: Record<string, string> = {
   Draft: 'status_draft',
@@ -9,6 +9,7 @@ export const statusLabelKey: Record<string, string> = {
   Closed: 'status_closed',
   Completed: 'status_completed',
   InProgress: 'status_inProgress',
+  Expired: 'status_expired',
 };
 
 export function StatusBadge({ status }: { status: string }) {
@@ -27,6 +28,8 @@ export function StatusBadge({ status }: { status: string }) {
       ? 'badge-completed'
       : key === 'InProgress'
       ? 'badge-inprogress'
+      : key === 'Expired'
+      ? 'badge-expired'
       : 'badge-draft';
   const labelKey = statusLabelKey[status] ?? status;
   const label = t(labelKey);

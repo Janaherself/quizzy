@@ -407,6 +407,7 @@ p { margin: 0 0 0.6rem; }
 .badge-closed { background: rgba(244, 67, 54, 0.18); color: var(--color-danger); }
 .badge-completed { background: rgba(76, 175, 80, 0.18); color: var(--color-success); }
 .badge-inprogress { background: rgba(255, 159, 67, 0.18); color: var(--color-warning); }
+.badge-expired { background: rgba(244, 67, 54, 0.18); color: var(--color-danger); }
 
 /* === Quiz Card (mobile-first) === */
 

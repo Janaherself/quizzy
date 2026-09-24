@@ -74,24 +74,26 @@ export function StudentDashboard() {
             >
               {quizzes.map((quiz) => (
                 <QuizCard key={quiz.id} quiz={quiz}>
-                  {quiz.status.toLowerCase() === 'live' ||
-                  quiz.status.toLowerCase() === 'inprogress' ||
-                  quiz.status.toLowerCase() === 'completed' ? (
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => handleAction(quiz)}
-                    >
-                      {quiz.status.toLowerCase() === 'live'
-                        ? t('student_startQuiz')
-                        : quiz.status.toLowerCase() === 'inprogress'
-                        ? t('student_resume')
-                        : t('student_viewResult')}
-                    </button>
-                  ) : (
-                    <button className="btn btn-outline btn-sm" disabled>
-                      {t('student_notYetAvailable')}
-                    </button>
-                  )}
+                 {quiz.status.toLowerCase() === 'live' ||
+                   quiz.status.toLowerCase() === 'inprogress' ||
+                   quiz.status.toLowerCase() === 'completed' ? (
+                     <button
+                       className="btn btn-primary btn-sm"
+                       onClick={() => handleAction(quiz)}
+                     >
+                       {quiz.status.toLowerCase() === 'live'
+                         ? t('student_startQuiz')
+                         : quiz.status.toLowerCase() === 'inprogress'
+                         ? t('student_resume')
+                         : t('student_viewResult')}
+                     </button>
+                   ) : (
+                     <button className="btn btn-outline btn-sm" disabled>
+                       {quiz.status.toLowerCase() === 'expired'
+                         ? t('student_expired')
+                         : t('student_notYetAvailable')}
+                     </button>
+                   )}
                 </QuizCard>
               ))}
             </div>
