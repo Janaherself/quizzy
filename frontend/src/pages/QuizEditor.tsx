@@ -49,6 +49,7 @@ export function QuizEditor() {
   const [editQuestionId, setEditQuestionId] = useState<number | null>(null);
   const [extendOpen, setExtendOpen] = useState(false);
   const [newEndAt, setNewEndAt] = useState('');
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
 
   const status = quiz ? quiz.status : 'Draft';
   const isPublished = quiz?.isPublished ?? false;
@@ -249,6 +250,30 @@ export function QuizEditor() {
         'error'
       );
     }
+  };
+
+  const handleDeleteQuestion = (questionId: number) => {
+    setDeleteConfirmId(questionId);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!quiz || deleteConfirmId === null) return;
+    try {
+      await quizzesApi.deleteQuestion(quiz.id, deleteConfirmId);
+      await loadQuestions(quiz.id);
+      toast.show(t('quizEditor_questionDeleted'), 'info');
+    } catch (err: any) {
+      toast.show(
+        err?.response?.data?.message ?? t('quizEditor_questionDeleteError'),
+        'error'
+      );
+    } finally {
+      setDeleteConfirmId(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteConfirmId(null);
   };
 
   return (
@@ -533,12 +558,22 @@ export function QuizEditor() {
                            </div>
                         </div>
                         {!isLive && editQuestionId !== q.id && (
-                          <button
-                            className="btn btn-ghost btn-sm"
-                            onClick={() => setEditQuestionId(q.id)}
-                          >
-                            {t('quizEditor_editQuestion')}
-                          </button>
+                          <>
+                            <button
+                              className="btn btn-ghost btn-sm"
+                              onClick={() => setEditQuestionId(q.id)}
+                              title={t('quizEditor_editQuestion')}
+                            >
+                              {t('quizEditor_editQuestion')}
+                            </button>
+                            <button
+                              className="btn btn-ghost btn-sm btn-delete"
+                              onClick={() => handleDeleteQuestion(q.id)}
+                              title={t('quizEditor_deleteQuestion')}
+                            >
+                              <span aria-label={t('quizEditor_deleteQuestion')}>×</span>
+                            </button>
+                          </>
                         )}
                       </div>
 
@@ -558,6 +593,33 @@ export function QuizEditor() {
             </div>
           )}
         </>
+      )}
+
+      {deleteConfirmId !== null && (
+        <div className="overlay">
+          <div className="dialog" style={{ maxWidth: '420px' }}>
+            <h3>{t('quizEditor_deleteQuestion')}</h3>
+            <p style={{ marginBottom: '1rem' }}>
+              {t('quizEditor_confirmDeleteQuestion')}
+            </p>
+            <div className="dialog-footer">
+              <button
+                type="button"
+                className="btn btn-outline btn-sm"
+                onClick={handleCancelDelete}
+              >
+                {t('quizEditor_cancel')}
+              </button>
+              <button
+                type="button"
+                className="btn btn-sm btn-delete-confirm"
+                onClick={handleConfirmDelete}
+              >
+                {t('quizEditor_deleteConfirm')}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

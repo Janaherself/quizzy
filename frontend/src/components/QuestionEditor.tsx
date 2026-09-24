@@ -58,13 +58,19 @@ export function QuestionEditor({
     setChoices((prev) => prev.filter((_, i) => i !== idx));
   };
 
+  const hasTextError = !text.trim();
+  const hasPointsError = parseInt(points, 10) <= 0 || isNaN(parseInt(points, 10));
+  const hasMinChoicesError = choices.length < 2;
+  const hasChoiceTextError = choices.some((c) => !c.text.trim());
+  const correctCount = choices.filter((c) => c.isCorrect).length;
+  const hasCorrectError = correctCount !== 1;
+
   const canSave =
-    text.trim().length > 0 &&
-    parseInt(points, 10) > 0 &&
-    choices.length >= 2 &&
-    choices.length <= 6 &&
-    choices.every((c) => c.text.trim().length > 0) &&
-    choices.filter((c) => c.isCorrect).length === 1;
+    !hasTextError &&
+    !hasPointsError &&
+    !hasMinChoicesError &&
+    !hasChoiceTextError &&
+    !hasCorrectError;
 
   const handleSave = async () => {
     const value: QuestionEditorValue = {
@@ -83,25 +89,31 @@ export function QuestionEditor({
       <div className="form-group">
         <label>{t('qe_questionText')}</label>
         <textarea
-          className="form-control"
+          className={`form-control ${hasTextError ? 'input-error' : ''}`}
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={2}
           placeholder={t('qe_questionPlaceholder')}
           disabled={isLocked}
         />
+        {hasTextError && (
+          <span className="error-msg">{t('qe_validation_textRequired')}</span>
+        )}
       </div>
       <div className="form-row" style={{ marginBottom: '0.75rem' }}>
         <div className="form-group" style={{ marginBottom: 0 }}>
           <label>{t('qe_points')}</label>
           <input
-            className="form-control"
+            className={`form-control ${hasPointsError ? 'input-error' : ''}`}
             type="number"
             min={1}
             value={points}
             onChange={(e) => setPoints(e.target.value)}
             disabled={isLocked}
           />
+          {hasPointsError && (
+            <span className="error-msg">{t('qe_validation_pointsRequired')}</span>
+          )}
         </div>
       </div>
 
@@ -142,7 +154,7 @@ export function QuestionEditor({
                 : t('qe_markCorrect')}
             </button>
             <input
-              className="form-control"
+              className={`form-control ${!choice.text.trim() ? 'input-error' : ''}`}
               type="text"
               placeholder={t('qe_choicePlaceholder', { index: idx + 1 })}
               value={choice.text}
@@ -161,6 +173,19 @@ export function QuestionEditor({
             </button>
           </div>
         ))}
+        {hasMinChoicesError && (
+          <span className="error-msg">{t('qe_validation_minChoices')}</span>
+        )}
+        {hasChoiceTextError && (
+          <span className="error-msg">{t('qe_validation_choiceTextRequired')}</span>
+        )}
+        {hasCorrectError && (
+          <span className="error-msg">
+            {correctCount === 0
+              ? t('qe_validation_noCorrectAnswer')
+              : t('qe_validation_multipleCorrect')}
+          </span>
+        )}
       </div>
 
       {!isLocked && (

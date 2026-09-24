@@ -208,6 +208,28 @@ header.app-header .logout-btn:hover {
   color: var(--color-text);
 }
 
+.btn-delete {
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.btn-delete:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.btn-delete-confirm {
+  background: var(--color-danger);
+  color: #fff;
+  border: none;
+}
+
+.btn-delete-confirm:hover {
+  background: #ff5247;
+  transform: translateY(-1px);
+}
+
 .lang-toggle {
   display: inline-flex;
   gap: 1px;
@@ -281,6 +303,15 @@ header.app-header .logout-btn:hover {
   box-shadow: 0 0 0 3px rgba(79, 139, 255, 0.18);
 }
 
+.form-control.input-error {
+  border-color: var(--color-danger);
+}
+
+.form-control.input-error:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.18);
+}
+
 .form-control::placeholder {
   color: var(--color-text-muted);
   opacity: 0.6;
@@ -310,6 +341,21 @@ header.app-header .logout-btn:hover {
   flex: 1;
   min-width: 140px;
   margin-bottom: 0;
+}
+
+/* Error messages */
+
+.error-msg {
+  color: var(--color-danger);
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+/* Inline validation */
+
+.choices-list .error-msg {
+  margin-top: 0.4rem;
 }
 
 /* === Typography === */

@@ -98,6 +98,11 @@ export const translations: Record<Language, Record<string, string>> = {
     quizEditor_questionSaveError: 'Failed to save question.',
     quizEditor_questionUpdated: 'Question updated.',
     quizEditor_questionUpdateError: 'Failed to update question.',
+    quizEditor_questionDeleted: 'Question deleted.',
+    quizEditor_questionDeleteError: 'Failed to delete question.',
+    quizEditor_deleteQuestion: 'Delete',
+    quizEditor_confirmDeleteQuestion: 'Are you sure you want to delete this question?',
+    quizEditor_deleteConfirm: 'Delete Question',
     quizEditor_loadQuestionsError: 'Failed to load questions.',
 
     // Quiz Editor validation
@@ -119,6 +124,14 @@ export const translations: Record<Language, Record<string, string>> = {
     qe_saving: 'Saving...',
     qe_update: 'Update',
     qe_add: 'Add',
+
+    // Question Editor validation
+    qe_validation_textRequired: 'Question text is required.',
+    qe_validation_pointsRequired: 'Points must be at least 1.',
+    qe_validation_minChoices: 'At least 2 choices are required.',
+    qe_validation_choiceTextRequired: 'All choices must have text.',
+    qe_validation_noCorrectAnswer: 'Select exactly one correct answer.',
+    qe_validation_multipleCorrect: 'Only one correct answer is allowed.',
 
     // Quiz Take (student)
     quizTake_loadError: 'Failed to load quiz.',
@@ -305,6 +318,11 @@ export const translations: Record<Language, Record<string, string>> = {
     quizEditor_questionSaveError: 'تعذر حفظ السؤال.',
     quizEditor_questionUpdated: 'تم تحديث السؤال.',
     quizEditor_questionUpdateError: 'تعذر تحديث السؤال.',
+    quizEditor_questionDeleted: 'تم حذف السؤال.',
+    quizEditor_questionDeleteError: 'تعذر حذف السؤال.',
+    quizEditor_deleteQuestion: 'حذف',
+    quizEditor_confirmDeleteQuestion: 'هل أنت متأكد من رغبتك في حذف هذا السؤال؟',
+    quizEditor_deleteConfirm: 'حذف السؤال',
     quizEditor_loadQuestionsError: 'تعذر تحميل الأسئلة.',
 
     // Quiz Editor validation
@@ -326,6 +344,14 @@ export const translations: Record<Language, Record<string, string>> = {
     qe_saving: 'جارٍ الحفظ...',
     qe_update: 'تحديث',
     qe_add: 'إضافة',
+
+    // Question Editor validation
+    qe_validation_textRequired: 'نص السؤال مطلوب.',
+    qe_validation_pointsRequired: 'يجب أن تكون النقاط على الأقل 1.',
+    qe_validation_minChoices: 'مطلوب على الأقل خياران.',
+    qe_validation_choiceTextRequired: 'جميع الخيارات يجب أن تحتوي على نص.',
+    qe_validation_noCorrectAnswer: 'حدد إجابة صحيحة واحدة.',
+    qe_validation_multipleCorrect: 'مسموح بإجابة صحيحة واحدة فقط.',
 
     // Quiz Take (student)
     quizTake_loadError: 'تعذر تحميل الاختبار.',
