@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { QuestionForTeacherDto, QuestionEditorValue } from '../api/types';
+import { useTranslation } from '../i18n/useTranslation';
 
 interface ChoiceEditor {
   text: string;
@@ -21,6 +22,7 @@ export function QuestionEditor({
   onCancel,
   isLoading = false,
 }: QuestionEditorProps) {
+  const { t } = useTranslation();
   const [text, setText] = useState(question?.text ?? '');
   const [points, setPoints] = useState(question?.points?.toString() ?? '5');
   const [choices, setChoices] = useState<ChoiceEditor[]>(() => {
@@ -77,21 +79,21 @@ export function QuestionEditor({
   };
 
   return (
-    <div className="question-editor rtl-fix">
+    <div className="question-editor">
       <div className="form-group">
-        <label>نص السؤال</label>
+        <label>{t('qe_questionText')}</label>
         <textarea
           className="form-control"
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={2}
-          placeholder="اكتب نص السؤال هنا..."
+          placeholder={t('qe_questionPlaceholder')}
           disabled={isLocked}
         />
       </div>
       <div className="form-row" style={{ marginBottom: '0.75rem' }}>
         <div className="form-group" style={{ marginBottom: 0 }}>
-          <label>العلامة</label>
+          <label>{t('qe_points')}</label>
           <input
             className="form-control"
             type="number"
@@ -111,7 +113,7 @@ export function QuestionEditor({
             color: 'var(--color-text-muted)',
           }}
         >
-          الخيارات ({choices.length}/6)
+          {t('qe_choices', { count: choices.length })}
         </label>
         {choices.map((choice, idx) => (
           <div key={idx} className="choice-editor">
@@ -125,7 +127,7 @@ export function QuestionEditor({
             <input
               className="form-control"
               type="text"
-              placeholder={`خيار ${idx + 1}`}
+              placeholder={t('qe_choicePlaceholder', { index: idx + 1 })}
               value={choice.text}
               onChange={(e) => handleChoiceText(idx, e.target.value)}
               disabled={isLocked}
@@ -136,7 +138,7 @@ export function QuestionEditor({
               className="btn btn-ghost btn-sm"
               onClick={() => removeChoice(idx)}
               disabled={isLocked || choices.length <= 2}
-              title="إزالة الخيار"
+              title={t('qe_removeChoice')}
             >
               ×
             </button>
@@ -151,7 +153,7 @@ export function QuestionEditor({
           onClick={addChoice}
           disabled={choices.length >= 6}
         >
-          إضافة خيار
+          {t('qe_addChoice')}
         </button>
       )}
 
@@ -162,7 +164,7 @@ export function QuestionEditor({
             className="btn btn-outline btn-sm"
             onClick={onCancel}
           >
-            إلغاء
+            {t('qe_cancel')}
           </button>
         )}
         <button
@@ -171,7 +173,7 @@ export function QuestionEditor({
           disabled={!canSave || isLocked || isLoading}
           onClick={handleSave}
         >
-          {isLoading ? 'جارٍ الحفظ...' : question ? 'تحديث' : 'إضافة'}
+          {isLoading ? t('qe_saving') : question ? t('qe_update') : t('qe_add')}
         </button>
       </div>
     </div>

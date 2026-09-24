@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { useToast } from '../components/Toast';
+import { useTranslation } from '../i18n/useTranslation';
+import { LanguageToggle } from '../components/LanguageToggle';
 
 interface LocationState {
   from?: { pathname: string };
@@ -15,6 +17,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
+  const { t } = useTranslation();
 
   const from =
     (location.state as LocationState | null)?.from?.pathname ?? '/';
@@ -30,7 +33,7 @@ export function LoginPage() {
     } catch (err: any) {
       const msg =
         err?.response?.data?.message ??
-        'فشل تسجيل الدخول. تحقق من بيانات الاعتماد.';
+        t('login_error');
       toast.show(msg, 'error');
     } finally {
       setSubmitting(false);
@@ -49,43 +52,45 @@ export function LoginPage() {
         }}
       >
         <div className="card" style={{ maxWidth: 400, width: '100%' }}>
-          <h1 className="text-center">مرحباً بك في Quizzy</h1>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.5rem' }}>
+            <LanguageToggle />
+          </div>
+          <h1 className="text-center">{t('login_welcome')}</h1>
           <p className="text-muted text-center mb-3">
-            سجّل دخلك للمتابعة
+            {t('login_subtitle')}
           </p>
 
-          {/* Demo credentials hint */}
           <div style={{ fontSize: '0.78rem', marginBottom: '1rem' }}>
             <div style={{ marginBottom: '0.3rem' }}>
-              <strong>معلم:</strong> teacher1@quizzy.local / pa$$1234
+              <strong>{t('login_teacher')}:</strong> teacher1@quizzy.local / pa$$1234
             </div>
             <div>
-              <strong>طالب:</strong> student1@quizzy.local / pa$$1234
+              <strong>{t('login_student')}:</strong> student1@quizzy.local / pa$$1234
             </div>
           </div>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="email">البريد الإلكتروني</label>
+              <label htmlFor="email">{t('login_email')}</label>
               <input
                 id="email"
                 className="form-control"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="example@quizzy.local"
+                placeholder={t('login_emailPlaceholder')}
                 required
               />
             </div>
             <div className="form-group">
-              <label htmlFor="password">كلمة المرور</label>
+              <label htmlFor="password">{t('login_password')}</label>
               <input
                 id="password"
                 className="form-control"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder={t('login_passwordPlaceholder')}
                 required
               />
             </div>
@@ -96,7 +101,7 @@ export function LoginPage() {
               disabled={submitting}
               style={{ width: '100%' }}
             >
-              {submitting ? 'جارٍ تسجيل الدخول...' : 'دخول'}
+              {submitting ? t('login_loading') : t('login_submit')}
             </button>
           </form>
         </div>

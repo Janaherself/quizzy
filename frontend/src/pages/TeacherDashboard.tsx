@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { quizzesApi } from '../api/quizzes';
 import type { QuizSummaryDto } from '../api/types';
 import { QuizCard } from '../components/QuizCard';
-import { StatusBadge } from '../components/StatusBadge';
 import { useToast } from '../components/Toast';
+import { useTranslation } from '../i18n/useTranslation';
 
 export function TeacherDashboard() {
+  const { t } = useTranslation();
   const [quizzes, setQuizzes] = useState<QuizSummaryDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export function TeacherDashboard() {
       const data = await quizzesApi.getTeacherQuizzes();
       setQuizzes(data);
     } catch (err: any) {
-      const msg = err?.response?.data?.message ?? 'تعذر تحميل الكويزات.';
+      const msg = err?.response?.data?.message ?? t('teacher_loadError');
       setError(msg);
       toast.show(msg, 'error');
     } finally {
@@ -44,9 +45,9 @@ export function TeacherDashboard() {
           marginBottom: '1.25rem',
         }}
       >
-        <h1>كويزاتي</h1>
+        <h1>{t('teacher_myQuizzes')}</h1>
         <button className="btn btn-primary" onClick={handleNew}>
-          كيزيس جديد
+          {t('teacher_newQuiz')}
         </button>
       </div>
 
@@ -67,9 +68,9 @@ export function TeacherDashboard() {
           {quizzes.length === 0 ? (
             <div className="empty-state">
               <div className="empty-icon">📋</div>
-              <p>لم تقم بعد بإنشاء أي كويزات.</p>
+              <p>{t('teacher_emptyTitle')}</p>
               <button className="btn btn-primary mt-2" onClick={handleNew}>
-                إنشاء كيزيس الأول
+                {t('teacher_emptyAction')}
               </button>
             </div>
           ) : (
@@ -86,7 +87,7 @@ export function TeacherDashboard() {
                     className="btn btn-outline btn-sm"
                     onClick={() => navigate(`/teacher/quizzes/${quiz.id}`)}
                   >
-                    تعديل
+                    {t('teacher_editQuiz')}
                   </button>
                   <button
                     className="btn btn-outline btn-sm"
@@ -94,7 +95,7 @@ export function TeacherDashboard() {
                       navigate(`/teacher/quizzes/${quiz.id}/results`)
                     }
                   >
-                    النتائج
+                    {t('teacher_results')}
                   </button>
                 </QuizCard>
               ))}

@@ -4,8 +4,12 @@ import { quizzesApi } from '../api/quizzes';
 import { studentQuizzesApi } from '../api/studentQuizzes';
 import type { QuizDto, TeacherQuizResultDto } from '../api/types';
 import { useToast } from '../components/Toast';
+import { useTranslation } from '../i18n/useTranslation';
+import { localeForLanguage } from '../utils/datetime';
 
 export function TeacherQuizResults() {
+  const { t, language } = useTranslation();
+  const locale = localeForLanguage(language);
   const { id } = useParams<{ id: string }>();
   const quizId = Number(id);
   const navigate = useNavigate();
@@ -32,7 +36,7 @@ export function TeacherQuizResults() {
       setQuiz(q);
       setResults(r);
     } catch (err: any) {
-      const msg = err?.response?.data?.message ?? 'تعذر تحميل النتائج.';
+      const msg = err?.response?.data?.message ?? t('teacherResults_loadError');
       setError(msg);
       toast.show(msg, 'error');
     } finally {
@@ -74,27 +78,27 @@ export function TeacherQuizResults() {
         >
           ←
         </button>
-        <h1>{quiz.title} — النتائج</h1>
+        <h1>{quiz.title} — {t('teacherResults_title')}</h1>
       </div>
 
       <div className="card">
         {results.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">📊</div>
-            <p>لم يقدم أي طالب هذا الكيزيس بعد.</p>
+            <p>{t('teacherResults_noResults')}</p>
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table className="results-table">
               <thead>
                 <tr>
-                  <th>الطالب</th>
-                  <th>البريد الإلكتروني</th>
-                  <th>الفصل</th>
-                  <th>النقاط</th>
-                  <th>الحد الأقصى</th>
-                  <th>الوقت</th>
-                  <th>الحالة</th>
+                  <th>{t('teacherResults_table_student')}</th>
+                  <th>{t('teacherResults_table_email')}</th>
+                  <th>{t('teacherResults_table_class')}</th>
+                  <th>{t('teacherResults_table_score')}</th>
+                  <th>{t('teacherResults_table_max')}</th>
+                  <th>{t('teacherResults_table_time')}</th>
+                  <th>{t('teacherResults_table_status')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -103,11 +107,12 @@ export function TeacherQuizResults() {
                     r.maxPossibleScore > 0
                       ? Math.round((r.score / r.maxPossibleScore) * 100)
                       : 0;
-                  const started = new Date(r.startedAt).toLocaleString('ar-EG', {
+                  const started = new Date(r.startedAt).toLocaleString(locale, {
                     month: 'short',
                     day: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit',
+                    timeZone: 'Asia/Amman',
                   });
                   return (
                     <tr key={r.submissionId}>
@@ -122,8 +127,8 @@ export function TeacherQuizResults() {
                       <td className="text-muted">{started}</td>
                       <td>
                         {r.status === 'Completed'
-                          ? 'مكتمل'
-                          : 'جارٍ الإنجاز'}
+                          ? t('teacherResults_completed')
+                          : t('teacherResults_inProgress')}
                       </td>
                     </tr>
                   );

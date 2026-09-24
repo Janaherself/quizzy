@@ -47,17 +47,20 @@ export function toAmmanDateTimeLocal(utcIso: string): string {
   return `${map.year}-${map.month}-${map.day}T${map.hour}:${map.minute}`;
 }
 
-export function formatDateTime(utcIso: string): string {
-  return new Intl.DateTimeFormat('ar-EG', {
+export function formatDateTime(utcIso: string, locale: string = 'en-US'): string {
+  return new Intl.DateTimeFormat(locale, {
     timeZone: AMMAN_TZ,
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(utcIso));
 }
 
-export function formatDate(utcIso: string): string {
-  return new Intl.DateTimeFormat('ar-EG', {
+export function formatDate(utcIso: string, locale: string = 'en-US'): string {
+  return new Intl.DateTimeFormat(locale, {
     timeZone: AMMAN_TZ,
     dateStyle: 'medium',
   }).format(new Date(utcIso));
 }
+
+export const localeForLanguage = (language: string): string =>
+  language === 'ar' ? 'ar-EG' : 'en-US';

@@ -9,6 +9,7 @@ import type {
 } from '../api/types';
 import { Timer } from '../components/Timer';
 import { useToast } from '../components/Toast';
+import { useTranslation } from '../i18n/useTranslation';
 
 interface StoredAttempt {
   submissionId: number;
@@ -21,6 +22,7 @@ interface StoredAttempt {
 const attemptKey = (quizId: number) => `quiz_attempt_${quizId}`;
 
 export function QuizTake() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const quizId = Number(id);
   const navigate = useNavigate();
@@ -44,7 +46,6 @@ export function QuizTake() {
   async function initPage() {
     setLoading(true);
     try {
-      // If already completed, jump to results.
       try {
         await studentQuizzesApi.getQuizResult(quizId);
         navigate(`/student/quizzes/${quizId}/result`, { replace: true });
@@ -53,7 +54,6 @@ export function QuizTake() {
         // no result yet — continue
       }
 
-      // Resume in-progress attempt from localStorage.
       const stored = localStorage.getItem(attemptKey(quizId));
       if (stored) {
         const attempt: StoredAttempt = JSON.parse(stored);
@@ -65,7 +65,6 @@ export function QuizTake() {
           setAnswers(attempt.answers);
           setStarted(true);
         } else {
-          // past deadline — clear and treat as fresh
           localStorage.removeItem(attemptKey(quizId));
         }
       }
@@ -76,7 +75,7 @@ export function QuizTake() {
       }
     } catch (err: any) {
       toast.show(
-        err?.response?.data?.message ?? 'تعذر تحميل الكيزيس.',
+        err?.response?.data?.message ?? t('quizTake_loadError'),
         'error'
       );
       navigate('/student');
@@ -118,7 +117,7 @@ export function QuizTake() {
       );
     } catch (err: any) {
       toast.show(
-        err?.response?.data?.message ?? 'تعذر بدء الكيزيس.',
+        err?.response?.data?.message ?? t('quizTake_startError'),
         'error'
       );
     }
@@ -161,10 +160,10 @@ export function QuizTake() {
       navigate(`/student/quizzes/${quizId}/result`, { replace: true });
     } catch (err: any) {
       if (err?.response?.status === 400) {
-        toast.show('انتهت الإجابة مرسلة بالفعل.', 'error');
+        toast.show(t('quizTake_alreadySubmitted'), 'error');
       } else {
         toast.show(
-          err?.response?.data?.message ?? 'تعذر إرسال الكيزيس.',
+          err?.response?.data?.message ?? t('quizTake_submitError'),
           'error'
         );
       }
@@ -175,7 +174,7 @@ export function QuizTake() {
 
   const handleTimerExpire = () => {
     if (submitting || !started) return;
-    toast.show('انتهى الوقت! يتم إرسال إجاباتك تلقائياً.', 'info');
+    toast.show(t('quizTake_timeUp'), 'info');
     handleSubmit();
   };
 
@@ -200,23 +199,23 @@ export function QuizTake() {
           {readyQuiz.description && (
             <p className="text-muted mb-3">{readyQuiz.description}</p>
           )}
-          <ul style={{ marginBottom: '1rem', paddingRight: '1.2rem' }}>
-            <li>{readyQuiz.questions.length} سؤال</li>
-            <li>مدة الكيزيس: {readyQuiz.durationMinutes} دقيقة</li>
+          <ul style={{ marginBottom: '1rem', paddingInlineEnd: '1.2rem' }}>
+            <li>{t('quizTake_questionsCount', { count: readyQuiz.questions.length })}</li>
+            <li>{t('quizTake_duration', { duration: readyQuiz.durationMinutes })}</li>
             {readyQuiz.negativeMarkingEnabled && (
-              <li>تفعيل التصحيح السلبي</li>
+              <li>{t('quizTake_negativeMarking')}</li>
             )}
-            <li>الوقت يبدأ عند الضغط على "إبدأ الكيزيس".</li>
+            <li>{t('quizTake_timerNote')}</li>
           </ul>
           <button className="btn btn-primary" onClick={handleStart}>
-            إبدأ الكيزيس
+            {t('quizTake_startQuiz')}
           </button>
           <button
             className="btn btn-outline"
-            style={{ marginLeft: '0.5rem' }}
+            style={{ marginInlineStart: '0.5rem' }}
             onClick={() => navigate('/student')}
           >
-            إلغاء
+            {t('quizTake_cancel')}
           </button>
         </div>
       </div>
@@ -241,13 +240,13 @@ export function QuizTake() {
         >
           <Timer deadline={deadline} onExpire={handleTimerExpire} />
           <span className="text-muted">
-            {answeredCount} / {activeQuiz.questions.length} مجاوبة
+            {t('quizTake_answered', { count: answeredCount, total: activeQuiz.questions.length })}
           </span>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {activeQuiz.questions.map((q: QuestionForTakingDto) => (
-            <div key={q.id} className="question-card rtl-fix">
+            <div key={q.id} className="question-card">
               <div
                 className="question-text"
                 style={{ fontSize: '1.1rem' }}
@@ -282,7 +281,7 @@ export function QuizTake() {
             disabled={submitting}
             style={{ width: '100%' }}
           >
-            {submitting ? 'جارٍ الإرسال...' : 'إنهاء وإرسال الكيزيس'}
+            {submitting ? t('quizTake_submitting') : t('quizTake_finishSubmit')}
           </button>
         </div>
       </div>
@@ -292,7 +291,7 @@ export function QuizTake() {
   // Fallback: quiz not available
   return (
     <div className="text-center">
-      <p className="text-muted">جارٍ تحميل الكيزيس...</p>
+      <p className="text-muted">{t('quizTake_loading')}</p>
     </div>
   );
 }

@@ -3,8 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { studentQuizzesApi } from '../api/studentQuizzes';
 import type { QuizResultDto } from '../api/types';
 import { useToast } from '../components/Toast';
+import { useTranslation } from '../i18n/useTranslation';
+import { localeForLanguage } from '../utils/datetime';
 
 export function QuizResultPage() {
+  const { t, language } = useTranslation();
+  const locale = localeForLanguage(language);
   const { id } = useParams<{ id: string }>();
   const quizId = Number(id);
   const navigate = useNavigate();
@@ -26,7 +30,7 @@ export function QuizResultPage() {
       const data = await studentQuizzesApi.getQuizResult(quizId);
       setResult(data);
     } catch (err: any) {
-      const msg = err?.response?.data?.message ?? 'تعذر تحميل النتيجة.';
+      const msg = err?.response?.data?.message ?? t('quizResult_loadError');
       setError(msg);
       toast.show(msg, 'error');
       if (err?.response?.status === 404) {
@@ -84,53 +88,53 @@ export function QuizResultPage() {
 
         <div className="quiz-card-meta" style={{ marginTop: '0.75rem' }}>
           <span>
-            الحالة: {result.status === 'Completed' ? 'مكتمل' : 'جارٍ الإنجاز'}
+            {t('quizResult_statusLabel')} {result.status === 'Completed' ? t('quizResult_completed') : t('quizResult_inProgress')}
           </span>
-          <span>{new Date(result.submittedAt).toLocaleString('ar-EG')}</span>
+          <span>{new Date(result.submittedAt).toLocaleString(locale, { timeZone: 'Asia/Amman' })}</span>
         </div>
       </div>
 
       <div style={{ marginTop: '1.25rem' }}>
-        <h2>تفاصيل الإجابة</h2>
+        <h2>{t('quizResult_answerDetails')}</h2>
         {result.answers.map((a) => {
           const isCorrect = a.isCorrect;
           const unanswered = a.selectedChoiceId === null;
           return (
-            <div key={a.questionId} className="question-card rtl-fix" style={{ marginBottom: '1rem' }}>
+            <div key={a.questionId} className="question-card" style={{ marginBottom: '1rem' }}>
               <div className="question-text">{a.questionText}</div>
               <div style={{ marginTop: '0.6rem' }}>
                 <div
                   className={
                     unanswered
                       ? 'text-warning'
-                    : isCorrect
-                    ? 'text-success'
-                    : 'text-danger'
+                      : isCorrect
+                      ? 'text-success'
+                      : 'text-danger'
                   }
                   style={{ fontSize: '0.85rem', marginBottom: '0.3rem' }}
                 >
                   {unanswered
-                    ? 'لم تُجيب'
+                    ? t('quizResult_notAnswered')
                     : isCorrect
-                    ? 'صحيح'
-                    : 'خطأ'}
+                    ? t('quizResult_correct')
+                    : t('quizResult_incorrect')}
                 </div>
                 <div className="quiz-card-meta" style={{ fontSize: '0.8rem' }}>
-                  <span>النقاط: {a.awardedPoints} / {a.questionPoints}</span>
+                  <span>{t('quizResult_points')} {a.awardedPoints} / {a.questionPoints}</span>
                 </div>
                 {!unanswered && !isCorrect && a.selectedChoiceText && (
                   <div
                     className="text-danger"
                     style={{ fontSize: '0.8rem', marginTop: '0.2rem' }}
                   >
-                    إجابتك: {a.selectedChoiceText}
+                    {t('quizResult_yourAnswer')} {a.selectedChoiceText}
                   </div>
                 )}
                 <div
                   className="text-success"
                   style={{ fontSize: '0.8rem', marginTop: '0.2rem' }}
                 >
-                  الصحيح: {a.correctChoiceText}
+                  {t('quizResult_correctAnswer')} {a.correctChoiceText}
                 </div>
               </div>
             </div>
@@ -139,7 +143,7 @@ export function QuizResultPage() {
       </div>
 
       <button className="btn btn-outline" onClick={() => navigate('/student')}>
-        العودة إلى كويزاتي
+        {t('quizResult_backToQuizzes')}
       </button>
     </div>
   );

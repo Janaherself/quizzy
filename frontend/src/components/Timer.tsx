@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from '../i18n/useTranslation';
 
 interface TimerProps {
   deadline: string;
@@ -9,6 +10,7 @@ interface TimerProps {
 const pad = (n: number) => String(n).padStart(2, '0');
 
 export function Timer({ deadline, onExpire, criticalThresholdMs = 60000 }: TimerProps) {
+  const { t } = useTranslation();
   const target = new Date(deadline).getTime();
   const computeRemaining = () => Math.max(0, target - Date.now());
 
@@ -36,10 +38,10 @@ export function Timer({ deadline, onExpire, criticalThresholdMs = 60000 }: Timer
     <div
       className={`timer ${critical ? 'critical' : ''}`}
       role="timer"
-      aria-label={remaining <= 0 ? 'انتهى الوقت' : 'الوقت المتبقي'}
+      aria-label={remaining <= 0 ? t('timer_timeUp') : t('timer_timeRemaining')}
     >
       {remaining <= 0
-        ? 'انتهى الوقت'
+        ? t('timer_timeUp')
         : `${pad(minutes)}:${pad(seconds)}`}
     </div>
   );

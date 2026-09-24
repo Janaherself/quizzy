@@ -1,15 +1,18 @@
+import { useTranslation } from '../i18n/useTranslation';
+
 export type QuizStatus = 'Draft' | 'Upcoming' | 'Live' | 'Closed' | 'Completed' | 'InProgress';
 
-export const statusLabel: Record<string, string> = {
-  Draft: 'مسودة',
-  Upcoming: 'قريباً',
-  Live: 'نشط',
-  Closed: 'مغلق',
-  Completed: 'مكتمل',
-  InProgress: 'جارٍ الإنجاز',
+export const statusLabelKey: Record<string, string> = {
+  Draft: 'status_draft',
+  Upcoming: 'status_upcoming',
+  Live: 'status_live',
+  Closed: 'status_closed',
+  Completed: 'status_completed',
+  InProgress: 'status_inProgress',
 };
 
 export function StatusBadge({ status }: { status: string }) {
+  const { t } = useTranslation();
   const key = status as QuizStatus;
   const cls =
     key === 'Draft'
@@ -25,15 +28,16 @@ export function StatusBadge({ status }: { status: string }) {
       : key === 'InProgress'
       ? 'badge-inprogress'
       : 'badge-draft';
-  const label = statusLabel[key] ?? status;
+  const labelKey = statusLabelKey[status] ?? status;
+  const label = t(labelKey);
   return <span className={`badge ${cls}`}>{label}</span>;
 }
 
-export const formatDateRange = (start: string, end: string) => {
+export const formatDateRange = (start: string, end: string, locale: string = 'en-US') => {
   const s = new Date(start);
   const e = new Date(end);
   const fmt = (d: Date) =>
-    d.toLocaleDateString('ar-EG', {
+    d.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

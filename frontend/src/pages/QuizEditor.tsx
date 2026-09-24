@@ -10,16 +10,20 @@ import type {
 import { QuestionEditor } from '../components/QuestionEditor';
 import { StatusBadge } from '../components/StatusBadge';
 import { useToast } from '../components/Toast';
+import { useTranslation } from '../i18n/useTranslation';
 import {
   fromAmmanDateTimeLocal,
   toAmmanDateTimeLocal,
   formatDateTime,
+  localeForLanguage,
 } from '../utils/datetime';
 
 const DEFAULT_DURATION = 20;
 const ADD_QUESTION_FLAG = -1;
 
 export function QuizEditor() {
+  const { t, language } = useTranslation();
+  const locale = localeForLanguage(language);
   const { id } = useParams<{ id: string }>();
   const isNew = id === 'new' || !id;
   const navigate = useNavigate();
@@ -83,7 +87,7 @@ export function QuizEditor() {
       setTargetClassIds(q.targetClassIds);
       await loadQuestions(quizId);
     } catch (err: any) {
-      const msg = err?.response?.data?.message ?? 'تعذر تحميل الكيزيس.';
+      const msg = err?.response?.data?.message ?? t('quizEditor_loadError');
       setError(msg);
       toast.show(msg, 'error');
     } finally {
@@ -96,7 +100,7 @@ export function QuizEditor() {
       const data = await quizzesApi.getQuestions(quizId);
       setQuestions(data);
     } catch {
-      toast.show('تعذر تحميل الأسئلة.', 'error');
+      toast.show(t('quizEditor_loadQuestionsError'), 'error');
     }
   }
 
@@ -105,7 +109,7 @@ export function QuizEditor() {
       const data = await quizzesApi.getClasses();
       setClasses(data);
     } catch {
-      toast.show('تعذر تحميل الفصول.', 'error');
+      toast.show(t('quizEditor_loadClassesError'), 'error');
     }
   }
 
@@ -119,15 +123,15 @@ export function QuizEditor() {
 
   const handleSaveQuiz = async () => {
     if (!title.trim()) {
-      toast.show('العنوان مطلوب.', 'error');
+      toast.show(t('quizEditor_validation_titleRequired'), 'error');
       return;
     }
     if (new Date(endAt) <= new Date(startAt)) {
-      toast.show('وقت البدء يجب أن يكون قبل وقت النهاية.', 'error');
+      toast.show(t('quizEditor_validation_datesOrder'), 'error');
       return;
     }
     if (targetClassIds.length === 0) {
-      toast.show('يجب تحديد فصل واحد على الأقل.', 'error');
+      toast.show(t('quizEditor_validation_targetClassRequired'), 'error');
       return;
     }
 
@@ -152,10 +156,10 @@ export function QuizEditor() {
       if (isNew) {
         navigate(`/teacher/quizzes/${saved.id}`, { replace: true });
       }
-      toast.show('تم حفظ الكيزيس.', 'info');
+      toast.show(t('quizEditor_saveSuccess'), 'info');
       await loadQuestions(saved.id);
     } catch (err: any) {
-      const msg = err?.response?.data?.message ?? 'تعذر حفظ الكيزيس.';
+      const msg = err?.response?.data?.message ?? t('quizEditor_saveError');
       setError(msg);
       toast.show(msg, 'error');
     } finally {
@@ -169,10 +173,10 @@ export function QuizEditor() {
       const updated = await quizzesApi.publishQuiz(quiz.id);
       setQuiz(updated);
       setExtendOpen(false);
-      toast.show('تم نشر الكيزيس.', 'info');
+      toast.show(t('quizEditor_publishSuccess'), 'info');
     } catch (err: any) {
       toast.show(
-        err?.response?.data?.message ?? 'تعذر نشر الكيزيس.',
+        err?.response?.data?.message ?? t('quizEditor_publishError'),
         'error'
       );
     }
@@ -188,9 +192,9 @@ export function QuizEditor() {
       setStartAt(toAmmanDateTimeLocal(updated.startAt));
       setEndAt(toAmmanDateTimeLocal(updated.endAt));
       setExtendOpen(false);
-      toast.show('تم تمديد الموعد النهائي.', 'info');
+      toast.show(t('quizEditor_extendSuccess'), 'info');
     } catch (err: any) {
-      toast.show(err?.response?.data?.message ?? 'تعذر تمديد الموعد.', 'error');
+      toast.show(err?.response?.data?.message ?? t('quizEditor_extendError'), 'error');
     }
   };
 
@@ -210,10 +214,10 @@ export function QuizEditor() {
       await quizzesApi.createQuestion(quiz.id, questionPayload);
       setEditQuestionId(null);
       await loadQuestions(quiz.id);
-      toast.show('تم حفظ السؤال.', 'info');
+      toast.show(t('quizEditor_questionSaved'), 'info');
     } catch (err: any) {
       toast.show(
-        err?.response?.data?.message ?? 'تعذر حفظ السؤال.',
+        err?.response?.data?.message ?? t('quizEditor_questionSaveError'),
         'error'
       );
     }
@@ -229,19 +233,19 @@ export function QuizEditor() {
         text: value.text,
         points: value.points,
         order: question.order,
-                  choices: value.choices.map((c, i) => ({
-                    id: null,
-                    text: c.text,
-                    isCorrect: c.isCorrect,
-                    order: i + 1,
-                  })),
+        choices: value.choices.map((c, i) => ({
+          id: null,
+          text: c.text,
+          isCorrect: c.isCorrect,
+          order: i + 1,
+        })),
       });
       setEditQuestionId(null);
       await loadQuestions(quiz.id);
-      toast.show('تم تحديث السؤال.', 'info');
+      toast.show(t('quizEditor_questionUpdated'), 'info');
     } catch (err: any) {
       toast.show(
-        err?.response?.data?.message ?? 'تعذر تحديث السؤال.',
+        err?.response?.data?.message ?? t('quizEditor_questionUpdateError'),
         'error'
       );
     }
@@ -266,7 +270,7 @@ export function QuizEditor() {
           >
             ←
           </button>
-          <h1>{isNew ? 'إنشاء كيزيس جديد' : 'تحرير الكيزيس'}</h1>
+          <h1>{isNew ? t('quizEditor_createNew') : t('quizEditor_edit')}</h1>
         </div>
         {!isNew && <StatusBadge status={status} />}
       </div>
@@ -279,31 +283,31 @@ export function QuizEditor() {
         <>
           {/* --- Quiz metadata --- */}
           <div className="card">
-            <h2>إعدادات الكيزيس</h2>
+            <h2>{t('quizEditor_quizSettings')}</h2>
             <div className="form-group">
-              <label>العنوان</label>
+              <label>{t('quizEditor_title')}</label>
               <input
                 className="form-control"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="عنوان الكيزيس"
+                placeholder={t('quizEditor_titlePlaceholder')}
                 disabled={isLive}
               />
             </div>
             <div className="form-group">
-              <label>الوصف (اختياري)</label>
+              <label>{t('quizEditor_description')}</label>
               <textarea
                 className="form-control"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="وصف موجز للكيزيس..."
+                placeholder={t('quizEditor_descriptionPlaceholder')}
                 rows={2}
                 disabled={isLive}
               />
             </div>
             <div className="form-row">
               <div className="form-group">
-                <label>وقت البدء</label>
+                <label>{t('quizEditor_startTime')}</label>
                 <input
                   className="form-control"
                   type="datetime-local"
@@ -313,7 +317,7 @@ export function QuizEditor() {
                 />
               </div>
               <div className="form-group">
-                <label>وقت النهاية</label>
+                <label>{t('quizEditor_endTime')}</label>
                 <input
                   className="form-control"
                   type="datetime-local"
@@ -323,7 +327,7 @@ export function QuizEditor() {
                 />
               </div>
               <div className="form-group">
-                <label>المدة (دقيقة)</label>
+                <label>{t('quizEditor_duration')}</label>
                 <input
                   className="form-control"
                   type="number"
@@ -341,13 +345,13 @@ export function QuizEditor() {
                 onChange={(e) => setNegativeMarking(e.target.checked)}
                 disabled={isLive}
               />
-              <label>تفعيل التصحيح السلبي</label>
+              <label>{t('quizEditor_negativeMarking')}</label>
             </div>
 
             <div className="form-group">
-              <label>الفصول المستهدفة</label>
+              <label>{t('quizEditor_targetClasses')}</label>
               {classes.length === 0 && (
-                <p className="text-muted">جارٍ تحميل الفصول...</p>
+                <p className="text-muted">{t('quizEditor_loadingClasses')}</p>
               )}
               <div
                 style={{
@@ -375,25 +379,29 @@ export function QuizEditor() {
               onClick={handleSaveQuiz}
               disabled={saving || isLive}
             >
-              {saving ? 'جارٍ الحفظ...' : isNew ? 'إنشاء الكيزيس' : 'حفظ التغييرات'}
+              {saving
+                ? t('quizEditor_saving')
+                : isNew
+                ? t('quizEditor_createButton')
+                : t('quizEditor_saveButton')}
             </button>
 
             {!isNew && isLive && (
               <button
                 className="btn btn-outline"
                 onClick={() => setExtendOpen(true)}
-                style={{ marginLeft: '0.5rem' }}
+                style={{ marginInlineStart: '0.5rem' }}
               >
-                تمديد الموعد النهائي
+                {t('quizEditor_extendDeadline')}
               </button>
             )}
 
             {!isNew && isPublished && !isLive && (
               <span
                 className="text-warning"
-                style={{ marginLeft: '0.5rem' }}
+                style={{ marginInlineStart: '0.5rem' }}
               >
-                تم نشر هذا الكيزيس؟ لا يمكن تعديل المحتوى الآن.
+                {t('quizEditor_publishedLocked')}
               </span>
             )}
 
@@ -401,9 +409,9 @@ export function QuizEditor() {
               <button
                 className="btn btn-outline"
                 onClick={handlePublish}
-                style={{ marginLeft: '0.5rem' }}
+                style={{ marginInlineStart: '0.5rem' }}
               >
-                نشر الكيزيس
+                {t('quizEditor_publish')}
               </button>
             )}
           </div>
@@ -412,15 +420,15 @@ export function QuizEditor() {
           {extendOpen && quiz && (
             <div className="overlay">
               <div className="dialog">
-                <h3>تمديد الموعد النهائي</h3>
+                <h3>{t('quizEditor_extendDeadline')}</h3>
                 <p className="text-muted">
-                  الموعد الحالي: {formatDateTime(quiz.endAt)}
+                  {t('quizEditor_currentDeadline')} {formatDateTime(quiz.endAt, locale)}
                 </p>
                 <p className="text-muted" style={{ fontSize: '0.8rem' }}>
-                  يجب أن يكون الموعد الجديد أبعد من الموعد الحالي.
+                  {t('quizEditor_extendHint')}
                 </p>
                 <div className="form-group">
-                  <label>الموعد الجديد</label>
+                  <label>{t('quizEditor_newDeadline')}</label>
                   <input
                     className="form-control"
                     type="datetime-local"
@@ -433,10 +441,10 @@ export function QuizEditor() {
                     className="btn btn-outline"
                     onClick={() => setExtendOpen(false)}
                   >
-                    إلغاء
+                    {t('quizEditor_cancel')}
                   </button>
                   <button className="btn btn-primary" onClick={handleExtendDeadline}>
-                    تمديد
+                    {t('quizEditor_extendAction')}
                   </button>
                 </div>
               </div>
@@ -453,7 +461,7 @@ export function QuizEditor() {
                   alignItems: 'center',
                 }}
               >
-                <h2>الأسئلة ({questions.length})</h2>
+                <h2>{t('quizEditor_questionsCount', { count: questions.length })}</h2>
                 {!isLive && (
                   <button
                     className="btn btn-outline btn-sm"
@@ -464,8 +472,8 @@ export function QuizEditor() {
                     }
                   >
                     {editQuestionId === ADD_QUESTION_FLAG
-                      ? 'إلغاء'
-                      : '+ إضافة سؤال'}
+                      ? t('quizEditor_cancel')
+                      : t('quizEditor_addQuestion')}
                   </button>
                 )}
               </div>
@@ -473,8 +481,8 @@ export function QuizEditor() {
               {questions.length === 0 && (
                 <p className="text-muted">
                   {isLive
-                    ? 'لا توجد أسئلة.'
-                    : 'أضف أسئلة للكيزيس. الكيزيس يجب أن يحتوي على سؤال واحد على الأقل للنشر.'}
+                    ? t('quizEditor_noQuestions')
+                    : t('quizEditor_addQuestionsHint')}
                 </p>
               )}
 
@@ -507,21 +515,20 @@ export function QuizEditor() {
                           >
                             {q.order}. {q.text}
                           </div>
-                          <div className="quiz-card-meta">
-                            <span>{q.points} نقطة</span>
-                            <span>{q.choices.length} خيارات</span>
-                            <span>
-                              الصحيح:{' '}
-                              {q.choices.find((c) => c.isCorrect)?.text}
-                            </span>
-                          </div>
+                           <div className="quiz-card-meta meta-separated">
+                             <span>{t('quizEditor_pointsShort', { count: q.points })}</span>
+                             <span>{t('quizEditor_choicesShort', { count: q.choices.length })}</span>
+                             <span>
+                               {t('quizEditor_correctLabel')} {q.choices.find((c) => c.isCorrect)?.text}
+                             </span>
+                           </div>
                         </div>
                         {!isLive && editQuestionId !== q.id && (
                           <button
                             className="btn btn-ghost btn-sm"
                             onClick={() => setEditQuestionId(q.id)}
                           >
-                            تعديل
+                            {t('quizEditor_editQuestion')}
                           </button>
                         )}
                       </div>

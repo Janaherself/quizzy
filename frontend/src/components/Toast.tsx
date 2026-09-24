@@ -38,7 +38,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         style={{
           position: 'fixed',
           bottom: '1.5rem',
-          right: '1.5rem',
+          insetInlineEnd: '1.5rem',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.5rem',

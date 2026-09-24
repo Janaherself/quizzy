@@ -1,12 +1,15 @@
 import { Outlet, NavLink, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
+import { useTranslation } from '../i18n/useTranslation';
+import { LanguageToggle } from './LanguageToggle';
 
 export function Layout() {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const location = useLocation();
 
-  const teacherLinks = [{ to: '/teacher', label: 'لوحة التحكم' }];
-  const studentLinks = [{ to: '/student', label: 'كويزاتي' }];
+  const teacherLinks = [{ to: '/teacher', labelKey: 'nav_dashboard' }];
+  const studentLinks = [{ to: '/student', labelKey: 'nav_myQuizzes' }];
 
   const links = user?.role === 'Teacher' ? teacherLinks : studentLinks;
 
@@ -20,7 +23,7 @@ export function Layout() {
       <header className="app-header">
         <div className="header-inner">
           <Link to="/" className="logo">
-            Quizzy
+            {t('appTitle')}
           </Link>
           <nav>
             {links.map((link) => (
@@ -29,14 +32,15 @@ export function Layout() {
                 to={link.to}
                 className={isActive(link.to) ? 'active' : ''}
               >
-                {link.label}
+                {t(link.labelKey)}
               </NavLink>
             ))}
             <span className="user-info">
               <span>{user?.name}</span>
               <button className="logout-btn" onClick={logout}>
-                خروج
+                {t('nav_logout')}
               </button>
+              <LanguageToggle />
             </span>
           </nav>
         </div>
