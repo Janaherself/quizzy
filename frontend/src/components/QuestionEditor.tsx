@@ -117,13 +117,30 @@ export function QuestionEditor({
         </label>
         {choices.map((choice, idx) => (
           <div key={idx} className="choice-editor">
-            <input
-              type="radio"
-              name={`correct-${question?.id ?? 'new'}`}
-              checked={choice.isCorrect}
-              onChange={() => handleCorrect(idx)}
+            <button
+              type="button"
+              className={
+                choice.isCorrect
+                  ? 'correct-btn correct-selected'
+                  : 'correct-btn'
+              }
+              onClick={() => handleCorrect(idx)}
               disabled={isLocked}
-            />
+              title={
+                choice.isCorrect
+                  ? t('qe_correctAnswer')
+                  : t('qe_markCorrect')
+              }
+            >
+              {choice.isCorrect && (
+                <span className="correct-icon" aria-label={t('qe_correctAnswer')}>
+                  ✓
+                </span>
+              )}
+              {choice.isCorrect
+                ? t('qe_correctAnswer')
+                : t('qe_markCorrect')}
+            </button>
             <input
               className="form-control"
               type="text"

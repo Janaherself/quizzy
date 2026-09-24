@@ -567,6 +567,54 @@ p { margin: 0 0 0.6rem; }
   font-size: 0.8rem;
 }
 
+.correct-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.correct-btn:hover {
+  border-color: var(--color-success);
+  background: rgba(76, 175, 80, 0.1);
+  color: var(--color-success);
+}
+
+.correct-btn.correct-selected,
+.correct-btn.correct-selected:hover {
+  background: rgba(76, 175, 80, 0.18);
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.correct-btn:disabled,
+.correct-btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.correct-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--color-success);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
 /* === Results table === */
 
 .results-table {
