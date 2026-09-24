@@ -1,0 +1,13 @@
+bin/
+obj/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+Backend.sln
+Dockerfile
+docker-compose*
+tests/
+*.md
+.git
