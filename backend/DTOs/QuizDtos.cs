@@ -163,6 +163,7 @@ public record QuizResultDto(
     string QuizTitle,
     int Score,
     int MaxPossibleScore,
+    int CorrectCount,
     DateTime StartedAt,
     DateTime SubmittedAt,
     SubmissionStatus Status,

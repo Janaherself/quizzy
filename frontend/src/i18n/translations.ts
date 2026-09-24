@@ -164,6 +164,9 @@ export const translations: Record<Language, Record<string, string>> = {
     quizResult_yourAnswer: 'Your answer:',
     quizResult_correctAnswer: 'Correct answer:',
     quizResult_backToQuizzes: 'Back to My Quizzes',
+    quizResult_correctCount: '{{count}} correct',
+    quizResult_incorrectCount: '{{count}} incorrect',
+    quizResult_notAnsweredCount: '{{count}} not answered',
 
     // Teacher Quiz Results
     teacherResults_loadError: 'Failed to load results.',
@@ -384,6 +387,9 @@ export const translations: Record<Language, Record<string, string>> = {
     quizResult_yourAnswer: 'إجابتك:',
     quizResult_correctAnswer: 'الصحيح:',
     quizResult_backToQuizzes: 'العودة إلى كويزاتي',
+    quizResult_correctCount: '{{count}} صحيحة',
+    quizResult_incorrectCount: '{{count}} خطأ',
+    quizResult_notAnsweredCount: '{{count}} لم تُجيب',
 
     // Teacher Quiz Results
     teacherResults_loadError: 'تعذر تحميل النتائج.',

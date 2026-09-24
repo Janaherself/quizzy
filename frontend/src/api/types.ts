@@ -178,6 +178,7 @@ export interface QuizResultDto {
   quizTitle: string;
   score: number;
   maxPossibleScore: number;
+  correctCount: number;
   startedAt: string;
   submittedAt: string;
   status: string;

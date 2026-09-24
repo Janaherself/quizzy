@@ -58,6 +58,9 @@ export function QuizResultPage() {
       ? Math.round((result.score / result.maxPossibleScore) * 100)
       : 0;
 
+  const incorrectCount = result.answers.length - result.correctCount -
+    result.answers.filter(a => a.selectedChoiceId === null).length;
+
   return (
     <div className="quiz-taking">
       <div className="card">
@@ -86,7 +89,38 @@ export function QuizResultPage() {
           </div>
         </div>
 
-        <div className="quiz-card-meta" style={{ marginTop: '0.75rem' }}>
+        <div
+          className="quiz-card-meta"
+          style={{
+            marginTop: '0.75rem',
+            display: 'flex',
+            gap: '1.5rem',
+            flexWrap: 'wrap',
+          }}
+        >
+          <span>
+            <span className="text-success" style={{ fontWeight: 700 }}>
+              ✓
+            </span>{' '}
+            {t('quizResult_correctCount', { count: result.correctCount })}
+          </span>
+          <span>
+            <span className="text-danger" style={{ fontWeight: 700 }}>
+              ✗
+            </span>{' '}
+            {t('quizResult_incorrectCount', { count: incorrectCount })}
+          </span>
+          <span>
+            <span className="text-muted" style={{ fontWeight: 700 }}>
+              ?
+            </span>{' '}
+            {t('quizResult_notAnsweredCount', {
+              count: result.answers.filter(a => a.selectedChoiceId === null).length,
+            })}
+          </span>
+        </div>
+
+        <div className="quiz-card-meta" style={{ marginTop: '0.5rem' }}>
           <span>
             {t('quizResult_statusLabel')} {result.status === 'Completed' ? t('quizResult_completed') : t('quizResult_inProgress')}
           </span>
@@ -111,13 +145,13 @@ export function QuizResultPage() {
                       ? 'text-success'
                       : 'text-danger'
                   }
-                  style={{ fontSize: '0.85rem', marginBottom: '0.3rem' }}
+                  style={{ fontSize: '0.85rem', marginBottom: '0.3rem', fontWeight: 700 }}
                 >
                   {unanswered
                     ? t('quizResult_notAnswered')
                     : isCorrect
-                    ? t('quizResult_correct')
-                    : t('quizResult_incorrect')}
+                    ? '✓ ' + t('quizResult_correct')
+                    : '✗ ' + t('quizResult_incorrect')}
                 </div>
                 <div className="quiz-card-meta" style={{ fontSize: '0.8rem' }}>
                   <span>{t('quizResult_points')} {a.awardedPoints} / {a.questionPoints}</span>
@@ -131,10 +165,10 @@ export function QuizResultPage() {
                   </div>
                 )}
                 <div
-                  className="text-success"
+                  className={isCorrect ? 'text-success' : 'text-muted'}
                   style={{ fontSize: '0.8rem', marginTop: '0.2rem' }}
                 >
-                  {t('quizResult_correctAnswer')} {a.correctChoiceText}
+                  {isCorrect ? '✓ ' : ''}{t('quizResult_correctAnswer')} {a.correctChoiceText}
                 </div>
               </div>
             </div>

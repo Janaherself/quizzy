@@ -328,6 +328,7 @@ public class SubmissionService : ISubmissionService
         var maxScore = quiz.Questions.Sum(q => q.Points);
 
         var answers = new List<AnswerResultDto>();
+        var correctCount = 0;
 
         foreach (var question in quiz.Questions.OrderBy(q => q.Order))
         {
@@ -340,6 +341,9 @@ public class SubmissionService : ISubmissionService
             bool isCorrect = answer?.SelectedChoiceId.HasValue == true &&
                             correctChoice != null &&
                             answer.SelectedChoiceId.Value == correctChoice.Id;
+
+            if (isCorrect)
+                correctCount++;
 
             answers.Add(new AnswerResultDto(
                 question.Id,
@@ -360,6 +364,7 @@ public class SubmissionService : ISubmissionService
             quiz.Title,
             submission.Score,
             maxScore,
+            correctCount,
             submission.StartedAt,
             submission.SubmittedAt ?? DateTime.UtcNow,
             submission.Status,
