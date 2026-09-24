@@ -374,17 +374,19 @@ export function QuizEditor() {
               </div>
             </div>
 
-            <button
-              className="btn btn-primary"
-              onClick={handleSaveQuiz}
-              disabled={saving || isLive}
-            >
-              {saving
-                ? t('quizEditor_saving')
-                : isNew
-                ? t('quizEditor_createButton')
-                : t('quizEditor_saveButton')}
-            </button>
+            {(!isLive || isNew) && (
+              <button
+                className="btn btn-primary"
+                onClick={handleSaveQuiz}
+                disabled={saving}
+              >
+                {saving
+                  ? t('quizEditor_saving')
+                  : isNew
+                  ? t('quizEditor_createButton')
+                  : t('quizEditor_saveButton')}
+              </button>
+            )}
 
             {!isNew && isLive && (
               <button
@@ -399,7 +401,7 @@ export function QuizEditor() {
               </button>
             )}
 
-            {!isNew && isPublished && !isLive && (
+            {!isNew && (isLive || status === 'Closed') && (
               <span
                 className="text-warning"
                 style={{ marginInlineStart: '0.5rem' }}
