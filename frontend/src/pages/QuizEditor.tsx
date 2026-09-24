@@ -389,7 +389,10 @@ export function QuizEditor() {
             {!isNew && isLive && (
               <button
                 className="btn btn-outline"
-                onClick={() => setExtendOpen(true)}
+                onClick={() => {
+              if (quiz) setNewEndAt(toAmmanDateTimeLocal(quiz.endAt));
+              setExtendOpen(true);
+            }}
                 style={{ marginInlineStart: '0.5rem' }}
               >
                 {t('quizEditor_extendDeadline')}
@@ -433,8 +436,12 @@ export function QuizEditor() {
                     className="form-control"
                     type="datetime-local"
                     value={newEndAt}
+                    step="60"
                     onChange={(e) => setNewEndAt(e.target.value)}
                   />
+                  <p className="text-muted" style={{ fontSize: '0.78rem' }}>
+                    {t('quizEditor_timeHint')}
+                  </p>
                 </div>
                 <div className="dialog-footer">
                   <button
