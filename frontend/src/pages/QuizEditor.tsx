@@ -52,6 +52,8 @@ export function QuizEditor() {
   const canPublish = !!quiz && !isPublished && !isLive && questions.length > 0;
 
   useEffect(() => {
+    loadClasses();
+
     if (isNew) {
       const now = new Date();
       const start = new Date(now.getTime() + 60 * 60 * 1000);
@@ -64,7 +66,6 @@ export function QuizEditor() {
     if (!id) return;
     const qid = Number(id);
     loadQuiz(qid);
-    loadClasses();
   }, [id, isNew]);
 
   async function loadQuiz(quizId: number) {
