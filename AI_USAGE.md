@@ -2,6 +2,7 @@
 
 ## Tools Used
 
+- ChatGPT (Brainstorming & DECISIONS.md generating)
 - Kilo (AI coding assistant)
 - GitHub Copilot (code completion)
 
