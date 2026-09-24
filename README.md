@@ -15,19 +15,44 @@ Quizzy is a tutoring-centre quiz platform that allows teachers to create and man
 
 ## Prerequisites
 
-- Docker and Docker Compose
-- .NET 8 SDK (for local development)
-- Node.js 20+ (for local development)
+- [Docker](https://docs.docker.com/get-docker/) and Docker Compose (included with Docker Desktop)
+- That's it — no .NET SDK or Node.js required to run via Docker
 
 ## Quick Start
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/your-org/quizzy.git
+cd quizzy
+
+# 2. Start the application
 docker compose up --build
+
+# 3. Open your browser
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:5000
 ```
 
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
+The database is automatically seeded with demo data on first run. Subsequent starts reuse the same data (persisted via Docker volume).
+
+### Stopping the Application
+
+```bash
+# Stop containers (keep database)
+docker compose down
+
+# Full reset (remove database too)
+docker compose down -v
+```
+
+### Reset Everything (optional)
+
+If you need to start fresh:
+
+```bash
+docker compose down -v    # stop containers and delete the database volume
+docker compose up --build # restart with fresh seed data
+```
 
 ## Demo Credentials
 
