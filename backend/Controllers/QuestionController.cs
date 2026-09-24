@@ -21,7 +21,7 @@ public class QuestionController : ControllerBase
 
     private int GetTeacherId()
     {
-        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
         return int.Parse(userIdClaim!.Value);
     }
 

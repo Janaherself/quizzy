@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<ActionResult<UserDto>> GetCurrentUser()
     {
-        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
         if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
             return Unauthorized();
 

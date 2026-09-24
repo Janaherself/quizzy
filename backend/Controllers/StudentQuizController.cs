@@ -22,7 +22,7 @@ public class StudentQuizController : ControllerBase
 
     private int GetStudentId()
     {
-        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
         return int.Parse(userIdClaim!.Value);
     }
 
