@@ -5,13 +5,7 @@ export function LanguageToggle() {
 
   return (
     <div
-      style={{
-        display: 'inline-flex',
-        gap: '0.25rem',
-        background: 'var(--color-bg-soft)',
-        borderRadius: 'var(--radius)',
-        padding: '0.2rem',
-      }}
+      className="lang-toggle"
       role="group"
       aria-label={t('lang_toggleHint')}
     >

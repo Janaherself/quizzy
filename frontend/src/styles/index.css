@@ -208,27 +208,38 @@ header.app-header .logout-btn:hover {
   color: var(--color-text);
 }
 
+.lang-toggle {
+  display: inline-flex;
+  gap: 1px;
+  background: var(--color-bg-soft);
+  border-radius: 999px;
+  padding: 0.2rem;
+  overflow: hidden;
+}
+
 .lang-btn {
+  border: none;
   background: transparent;
-  border: 1px solid var(--color-border);
   color: var(--color-text-muted);
-  border-radius: var(--radius);
-  padding: 0.3rem 0.8rem;
+  border-radius: 0;
+  padding: 0.3rem 0.9rem;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
+  flex: 1;
+  min-width: 70px;
+  text-align: center;
 }
 
 .lang-btn:hover {
   color: var(--color-text);
-  background: var(--color-bg-soft);
 }
 
 .lang-btn.active {
   background: var(--color-accent);
   color: #fff;
-  border-color: var(--color-accent);
+  border-radius: 999px;
 }
 
 .btn:disabled,
