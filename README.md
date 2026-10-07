@@ -1,10 +1,6 @@
 # Quizzy
 
-A quiz platform for AI-assisted developer role assessment.
-
-## Overview
-
-Quizzy is a tutoring-centre quiz platform that allows teachers to create and manage quizzes, and students to take timed multiple-choice quizzes. The system supports Arabic content, RTL layouts, and mobile-first student experience.
+A tutoring-centre quiz platform that allows teachers to create and manage quizzes, and students to take timed multiple-choice quizzes. The system supports Arabic content, RTL layouts, and mobile-first student experience.
 
 ## Tech Stack
 
